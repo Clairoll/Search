@@ -9,7 +9,7 @@
           <ul>
             <li><router-link :to="{path:'/login-card'}" class="index-content">校园卡</router-link></li>
             <li><router-link :to="{path:'/login-class'}" class="index-content">课程表</router-link></li>
-            <li><router-link :to="{path:'/library'}" class="index-content">图书馆</router-link></li>
+            <li><router-link :to="{path:'/library-index'}" class="index-content">图书馆</router-link></li>
             <li><router-link :to="{path:'/'}" class="index-content">请期待</router-link></li>
           </ul>
         </div>

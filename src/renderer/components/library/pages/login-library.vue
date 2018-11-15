@@ -6,7 +6,7 @@
         <span @click="_back">返回</span>
       </div>
       <div class="content">
-        <div class="title"><span>图书馆表服务</span></div>
+        <div class="title"><span>图书馆服务</span></div>
         <div class="table">
           <div class="user">
             <span>用户:</span>
@@ -17,7 +17,7 @@
             <input type="password" ref="pass" value="">
           </div>
           <div class="search">
-            <button  @click='_check'>查询</button>
+            <button  @click='_check' >登录</button>
           </div>
         </div>
       </div>
@@ -26,145 +26,151 @@
 </template>
 
 <script>
-  export default {
-    name: 'login-library',
-    methods: {
-      _back() {
-        this.$router.go(-1)
-      },
-      _check() {
-        //获取用户输入的学号
-        this.user = this.$refs.user.value;
-        this.pass = this.$refs.pass.value;
-        let _this = this;
-        if (this.user==="" || this.pass==="") {
-          alert("请输入账号和密码");
-        } else {
-          $.ajax({
+export default {
+  name: "login-library",
+  methods: {
+    _back() {
+      this.$router.go(-1);
+    },
+    _check() {
+      //获取用户输入的学号
+      this.user = this.$refs.user.value;
+      this.pass = this.$refs.pass.value;
+      let _this = this;
+      if (this.user === "" || this.pass === "") {
+        alert("请输入账号和密码");
+      } else {
+        $.ajax({
           type: "POST",
-          url:_this.GLOBAL.URL + "/library/login",
-          data: {SFRZH: this.user, SFID: this.pass},
+          url: "http://222.195.120.110:8080/select/library/login",
+          data: { SFRZH: _this.user, SFID: _this.pass },
           dataType: "jsonp",
           async: true,
           jsonp: "callback",
           success: function(res) {
-            console.log(res.code);
-            // if (res.status === 200){
-            //   _this.$router.push({path:'/class', query:{xgh: _this.$refs.user.value, XM: res.data.xm}});
-            // } else {
-            //   alert(res.msg)
-            // _this.$router.push({path: '/LoginSuc', query:{Name: res.data.data.dzxm}});
-            // }
+            // res= JSON.parse(res)
+            if (res.code === 200) {
+              _this.$router.push({
+                path: `/login-suc`,
+                query: { DZXM: res.data.dzxm, SFRZH: res.data.sfrzh }
+              });
+            } else {
+              alert("用户名或密码不正确");
+            }
           },
           error: function() {
             console.log("获取失败");
           }
         });
-        }
       }
     }
   }
+};
 </script>
 
 <style>
-  .login-class .bg{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    margin: 0 auto;
-  }
-  .login-class img{
-    background-repeat: no-repeat;
-    background-position: center center;
-    width: 100%;
-    height: 100%;
-  }
-  .login-class .return{
-    width: 115px;
-    height: 55px;
-    background: linear-gradient(to right, rgba(0,34,52,0.4), rgba(54,191,255,1));
-    box-shadow: 0px 0px 8px #fff;
-    position: absolute;
-    top: 9%;
-    left: 7%;
-    line-height: 55px;
-    text-align: center;
-    border-radius: 15px;
-  }
-  .login-class span{
-    text-decoration: none;
-    color: white;
-    font-size: 40px;
-    font-family: JLH;
-    -webkit-text-fill-color: #fff;
-    -webkit-text-stroke: 2px #fff;
-  }
-  .login-class .content{
-    width: 589px;
-    height: 798px;
-    background: rgba(9,59,85,0.33);
-    position:absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    border-radius: 10px;
-    box-shadow: 0px 0px 14px #fff;
-  }
-  .login-class .title{
-    text-align: center;
-    margin: 127px 0 113px 0;
-  }
-  .login-class .title span{
-    font-size: 80px;
-  }
-  .login-class .table{
-    text-align: center;
-  }
-  
-  .login-class .user input{
-    width: 273px;
-    height: 40px;
-    border-radius: 15px;
-    outline: none;
-    margin-left: 20px;
-    font-size: 28px;
-    color: #186d92;
-    padding-left: 13px;
-    line-height: 40px;
-    margin-top:-13px;
-  }
-  .login-class .pass{
-    margin: 75px 0 118px 0px;
-  }
-  .login-class .pass input{
-    width: 273px;
-    height: 40px;
-    border-radius: 15px;
-    margin-left: 20px;
-    outline: none;
-    font-size: 28px;
-    color: #186d92;
-    padding-left: 13px;
-    line-height: 40px;
-    margin-top:-13px;
-  }
-  .login-class .search{
-    margin: 0 auto;
-    border-radius: 15px;
-    height: 70px;
-    width: 388px;
-  }
-  .search button{
-    color: rgb(4,40,57);
-    height: 100%;
-    width: 100%;
-    font-size: 40px;
-    border-radius: 15px;
-    font-family: JLH;
-    -webkit-text-fill-color: rgb(4,40,57);
-    -webkit-text-stroke: 2px rgb(4,40,57);
-    outline: none;
-  }
+.login-class .bg {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin: 0 auto;
+}
+.login-class img {
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 100%;
+  height: 100%;
+}
+.login-class .return {
+  width: 115px;
+  height: 55px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 34, 52, 0.4),
+    rgba(54, 191, 255, 1)
+  );
+  box-shadow: 0px 0px 8px #fff;
+  position: absolute;
+  top: 9%;
+  left: 7%;
+  line-height: 55px;
+  text-align: center;
+  border-radius: 15px;
+}
+.login-class span {
+  text-decoration: none;
+  color: white;
+  font-size: 40px;
+  font-family: JLH;
+  -webkit-text-fill-color: #fff;
+  -webkit-text-stroke: 2px #fff;
+}
+.login-class .content {
+  width: 589px;
+  height: 798px;
+  background: rgba(9, 59, 85, 0.33);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0px 0px 14px #fff;
+}
+.login-class .title {
+  text-align: center;
+  margin: 127px 0 113px 0;
+}
+.login-class .title span {
+  font-size: 80px;
+}
+.login-class .table {
+  text-align: center;
+}
+
+.login-class .user input {
+  width: 273px;
+  height: 40px;
+  border-radius: 15px;
+  outline: none;
+  margin-left: 20px;
+  font-size: 28px;
+  color: #186d92;
+  padding-left: 13px;
+  line-height: 40px;
+  margin-top: -13px;
+}
+.login-class .pass {
+  margin: 75px 0 118px 0px;
+}
+.login-class .pass input {
+  width: 273px;
+  height: 40px;
+  border-radius: 15px;
+  margin-left: 20px;
+  outline: none;
+  font-size: 28px;
+  color: #186d92;
+  padding-left: 13px;
+  line-height: 40px;
+  margin-top: -13px;
+}
+.login-class .search {
+  margin: 0 auto;
+  border-radius: 15px;
+  height: 70px;
+  width: 388px;
+}
+.search button {
+  color: rgb(4, 40, 57);
+  height: 100%;
+  width: 100%;
+  font-size: 40px;
+  border-radius: 15px;
+  font-family: JLH;
+  -webkit-text-fill-color: rgb(4, 40, 57);
+  -webkit-text-stroke: 2px rgb(4, 40, 57);
+  outline: none;
+}
 </style>

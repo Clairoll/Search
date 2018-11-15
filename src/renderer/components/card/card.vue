@@ -130,16 +130,18 @@ export default {
       // 获取到用户输入的结束时间
       this.maxtime = this.$refs.maxtime.value;
       // 判断用户输入的起始时间与结束时间之间的关系
-      var mint = new Date(this.mintime);
-      var maxt = new Date(this.maxtime);
-      var nowt = new Date();
+      var mint = new Date(this.mintime).getTime();
+      var maxt = new Date(this.maxtime).getTime();
+      var nowt = new Date().getTime();
+      var Dvalue = parseInt((nowt - mint) / (1000 * 60 * 60 * 24));
       var _this = this;
       if (
         this.mintime > this.maxtime ||
-        mint.getTime() > nowt.getTime() ||
-        maxt.getTime() > nowt.getTime()
+        mint > nowt ||
+        maxt > nowt ||
+        Dvalue > 365
       ) {
-        alert("时间输入有误");
+        alert("只能查询一年内的消费记录，请输入合理时间");
       } else {
         $.ajax({
           type: "GET",
@@ -168,6 +170,11 @@ export default {
   background: #135677;
   position: absolute;
   left: 0;
+}
+.card .loading{
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
 }
 .card .title {
   display: block;

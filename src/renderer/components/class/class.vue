@@ -518,6 +518,11 @@ export default {
   position: absolute;
   left: 0;
 }
+.card .loading{
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+}
 .class .title {
   display: block;
   margin-left: 54px;

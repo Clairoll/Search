@@ -1,9 +1,7 @@
 <template>
   <div class="class">
-    <div v-if="item.length===0">
-      <img src="../../assets/loading.gif" class="loading">
-    </div>
-    <div v-else>
+    
+    <div>
       <div class="bg">
         <span class="title">课程表服务</span>
       </div>
@@ -518,7 +516,7 @@ export default {
   position: absolute;
   left: 0;
 }
-.card .loading{
+.class .loading{
   margin: 0 auto;
   width: 100%;
   height: 100%;

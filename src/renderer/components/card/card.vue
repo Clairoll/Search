@@ -132,15 +132,15 @@ export default {
       // 判断用户输入的起始时间与结束时间之间的关系
       var mint = new Date(this.mintime).getTime();
       var maxt = new Date(this.maxtime).getTime();
-      var nowt = new Date().getTime();
-      var Dvalue = parseInt((nowt - mint) / (1000 * 60 * 60 * 24));
+      var nowt = new Date().getTime() + ( 8 * 60 * 60 * 1000);
+      var Dvalue = parseInt((nowt - mint) / (1000 * 60 * 60 * 24 ));
+      console.log(this.$refs.maxtime.value);
       var _this = this;
-      if (
-        this.mintime > this.maxtime ||
-        mint > nowt ||
-        maxt > nowt ||
-        Dvalue > 365
-      ) {
+      if( _this.$refs.maxtime.value == '' || _this.$refs.mintime.value == '') {
+        alert("请输入时间");
+      } else if (this.mintime > this.maxtime || mint > nowt || maxt > nowt) {
+        alert("请输入合理时间");
+      } else if (Dvalue > 365) {
         alert("只能查询一年内的消费记录，请输入合理时间");
       } else {
         $.ajax({

@@ -12,7 +12,7 @@ import LibraryHotRecommend from '../components/library/components/library-hot-re
 import LibraryCategoryOne from '../components/library/components/library-category-one'
 import LibraryContent from '../components/library/components/library-content'
 import LibraryFindBook from '../components/library/components/library-find-book'
-
+import rbck from '../components/rbck/rbck.vue'
 
 Vue.use(Router);
 
@@ -37,6 +37,14 @@ export default new Router({
       path: '/login-class',
       name: 'LoginClass',
       component: LoginClass
+    },
+    {
+      path: '/rbck',
+      meta: {
+        title: '跳转页',
+        scrollToTop: true
+      },
+      component: rbck,
     },
     {
       path: '/class',

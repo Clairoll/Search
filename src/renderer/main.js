@@ -34,7 +34,7 @@ new Vue({
       clearInterval(that.timeOut);
       that.timeOut = setInterval(function () {
         that.$router.push({ path: '/rbck' })
-      }, 1000 * 60 * 0.2)
+      }, 1000 * 60 * 3)
     },
     isTimeOut() {
       let that = this;

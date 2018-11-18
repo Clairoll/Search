@@ -20,7 +20,7 @@
           <div class="library-message-left">
             <div class="message-left-login">
               <router-link to="/login-library">
-                <img src="../../../assets/img/not-login.png" class="message-left-img"/>
+                <img src="../../../assets/img/not-login.jpg" class="message-left-img"/>
               </router-link>
               <div class="message-left-title">
                 我的图书馆
@@ -108,7 +108,7 @@
          pages:0,
          navigatepageNums:[],
          errorMsg:'',
-         currentIndex:1
+         currentIndex:1,
       }
     },
     created(){
@@ -263,7 +263,7 @@
     background: #fff;
     top:60px;
     right:46px;
-    bottom:124px;
+    bottom:82px;
     display: flex;
     box-shadow:-1px -1px 25px #555;
 
@@ -317,7 +317,7 @@
   .library-index-back{
     position: absolute;
     left:50px;
-    bottom:52px;
+    bottom:10px;
     right:46px;
     font-family: SIMHEI;
     height:72px;

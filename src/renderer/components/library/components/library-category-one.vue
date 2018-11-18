@@ -24,10 +24,8 @@
                 <table class="category-view-table">
                   <tr class="category-view-tr-small">
                     <th class="category-view-th">题名</th>
-                    <th class="category-view-th">责任者</th>
-                    <th class="category-view-th">出版信息</th>
+                    <th class="category-view-th">作者</th>
                     <th class="category-view-th">索书号</th>
-                    <th class="category-view-th">借阅次数</th>
                   </tr>
                   <tr
                       class="category-view-tr-big"
@@ -37,9 +35,7 @@
                   >
                     <td class="category-view-td">{{item.tm}}</td>
                     <td class="category-view-td">{{item.dyzz}}</td>
-                    <td class="category-view-td">{{item.cbsmc}}</td>
                     <td class="category-view-td">{{item.ssh}}</td>
-                    <td class="category-view-td">{{item.yjcs}}</td>
                   </tr>
                 </table>
                   <ul class="library-message-ul">
@@ -153,7 +149,7 @@
         page:parseInt(this.$route.params.page),
         pages:0,
         currentIndex:1,
-        showRight:'A'
+        showRight:'A',
       }
     },
     created(){
@@ -190,6 +186,7 @@
         this.showRight=flh;
         this.page=page;
         this.flh=flh;
+        this.currentIndex=1;
         $.ajax({
           type: "GET",
           url:`${_this.GLOBAL.URL}/library/categoryRanking/${this.flh}/${this.page}`,
@@ -317,10 +314,9 @@
     font-size: 16px;
     font-family: SIMHEI;
     color:#186d92;
-    width:18%;
+    width:30%;
     text-align: center;
     padding-left:10px;
-
   }
   .category-view-tr-big{
     display: inline-block;
@@ -328,13 +324,11 @@
     border-bottom: 1px solid #ccc;
     box-shadow: 0 1px 2px #ccc;
   }
-
-
   .category-view-td{
     font-family: SIMHEI;
     display: inline-block;
     color: #000;
-    width:18%;
+    width:30%;
     text-align: center;
     height: 60px;
     line-height: 60px;
@@ -342,7 +336,6 @@
     text-overflow: ellipsis;
     overflow: hidden;
     padding-left:10px;
-
   }
   .library-message-ul{
     position: absolute;

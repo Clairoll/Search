@@ -21,7 +21,7 @@
         <table class="library-message-table">
           <tr class="library-message-tr-small" >
             <th class="library-message-th">题名</th>
-            <th class="library-message-th">责任者</th>
+            <th class="library-message-th">作者</th>
             <th class="library-message-th">出版信息</th>
             <th class="library-message-th">索书号</th>
             <th class="library-message-th">借阅次数</th>
@@ -72,7 +72,7 @@
          navigatepageNums:[],
          page:this.$route.params.page,
          pages:0,
-         currentIndex:1
+         currentIndex:1,
       }
     },
     created(){

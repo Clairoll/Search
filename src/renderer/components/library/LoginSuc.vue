@@ -37,19 +37,13 @@
             <span class="header-signal"></span>
             <span class="header-content">历史借阅</span>
             <div class="current-title border-bottom">
-              <span class="title-num" style="width: 400px;">书名</span>
-              <span class="rentd" style="width: 400px;">续借次数</span>
-              <span class="backd" style="width: 400px;">应还日期</span>
+              <el-table :data="this.listlocal.slice((currentPage-1)*pagesize,currentPage*pagesize)">
+                <el-table-column label="书名" prop="tsmc"></el-table-column>
+                <el-table-column label="续借次数" prop="xjbs"></el-table-column>
+                <el-table-column label="应还日期" prop="hsrq"></el-table-column>
+              </el-table>
+              <el-pagination background layout="prev, pager, next" :total="listlocal.length"@size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
             </div>
-              <div class="local-content" ref="wrapper">
-                <ul class="content-ul">
-                  <li class="content-li border-bottom" v-for="item of listlocal">
-                    <span class="content-num" style="width: 400px;">{{item.tsmc}}</span>
-                    <span class="content-or" style="width: 400px;">{{item.xjbs}}</span>
-                    <span class="content-backd">{{item.hsrq}}</span>
-                  </li>
-                </ul>
-              </div>
           </div>
         </div>
       </div>
@@ -59,22 +53,14 @@
             <span class="header-signal"></span>
             <span class="header-content">当前借阅</span>
             <div class="current-title border-bottom">
-              <span class="title-num">书名</span>
-              <span class="title-name">结束日期</span>
-              <span class="title-or">续借次数</span>
-              <span class="rentd">续借日期</span>
-              <span class="backd">应还日期</span>
-              <div class="current-content">
-                <ul>
-                  <li class="content-li border-bottom" v-for="item of listcurrent">
-                    <span class="content-num">{{item.tsmc}}</span>
-                    <span class="content-name">{{item.jsrq}}</span>
-                    <span class="content-or">{{item.xjbs}}</span>
-                    <span class="content-rentd">{{item.xjrq}}</span>
-                    <span class="content-backd">{{item.yhrq}}</span>
-                  </li>
-                </ul>
-              </div>
+              <el-table :data="this.listcurrent.slice((currentPage1-1)*pagesize1,currentPage1*pagesize1)">
+                <el-table-column label="书名" prop="tsmc"></el-table-column>
+                <el-table-column label="结束日期" prop="jsrq"></el-table-column>
+                <el-table-column label="续借次数" prop="xjbs"></el-table-column>
+                <el-table-column label="续借日期" prop="xjrq"></el-table-column>
+                <el-table-column label="应还日期" prop="yhrq"></el-table-column>
+              </el-table>
+              <el-pagination background layout="prev, pager, next" :total="listcurrent.length"@size-change="handleSizeChange1" @current-change="handleCurrentChange1"></el-pagination>
             </div>
           </div>
         </div>
@@ -88,17 +74,20 @@
 </template>
 
 <script>
-import BScroll from "better-scroll";
 export default {
   name: "LibrarySuc",
   data() {
     return {
+      currentPage: 1, // 初始页
+      pagesize: 10, // 每页的数据
+      currentPage1: 1, // 初始页
+      pagesize1: 10,
+      listcurrent: [],
+      listlocal: [],
       on: true,
       close: false,
       showLocal: false,
       showCurrent: true,
-      listlocal: {},
-      listcurrent: {},
       user: this.$route.query.SFRZH,
       MSG: ""
     };
@@ -107,7 +96,7 @@ export default {
     let _this = this;
     $.ajax({
       type: "GET",
-      url: `http://222.195.120.110:8080/select/library/currentborrow/${
+      url: `${_this.GLOBAL.URL}/library/currentborrow/${
         this.user
       }`,
       dataType: "jsonp",
@@ -126,6 +115,19 @@ export default {
     });
   },
   methods: {
+    // 初始页currentPage、初始每页数据数pagesize和数据data
+    handleSizeChange(size) {
+      this.pagesize = size; //每页下拉显示数据
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+    },
+    handleSizeChange1(size1) {
+      this.pagesize1 = size1; //每页下拉显示数据
+    },
+    handleCurrentChange1(currentPage1) {
+      this.currentPage1 = currentPage1;
+    },
     currentShow() {
       this.on = !this.on;
       this.close = !this.close;
@@ -134,7 +136,7 @@ export default {
       let _this = this;
       $.ajax({
         type: "GET",
-        url: `http://222.195.120.110:8080/select/library/currentborrow/${
+        url: `${_this.GLOBAL.URL}/library/currentborrow/${
           this.user
         }`,
         dataType: "jsonp",
@@ -161,7 +163,7 @@ export default {
       let _this = this;
       $.ajax({
         type: "GET",
-        url: `http://222.195.120.110:8080/select/library/historyborrow/${
+        url: `${_this.GLOBAL.URL}/library/historyborrow/${
           this.user
         }`,
         dataType: "jsonp",
@@ -180,10 +182,6 @@ export default {
       });
     }
   },
-  mounted() {
-    this.scroll = new BScroll(this.$refs.wrapper);
-    console.log(this.scroll);
-  }
 };
 </script>
 
@@ -305,77 +303,12 @@ export default {
   margin-top: 300px;
   margin-left: 280px;
 }
-.local-content {
-  position: absolute;
-  left: 0px;
-  width: 100%;
-  height: 700px;
-  overflow: hidden;
-}
-.content-ul {
-}
-.content-li {
-  width: 100%;
-  height: 77px;
-  line-height: 77px;
-  paddding-left: 37px;
-  color: rgb(161, 161, 156);
-}
 .current-title {
   width: 100%;
   height: 33px;
   line-height: 33px;
   font-size: 16px;
   color: rgb(24, 109, 146);
-}
-.title-num {
-  display: inline-block;
-  width: 200px;
-  margin-left: 30px;
-}
-.title-name {
-  display: inline-block;
-  width: 200px;
-}
-.title-or {
-  display: inline-block;
-  width: 200px;
-}
-.rentd {
-  display: inline-block;
-  width: 200px;
-}
-.backd {
-  display: inline-block;
-  width: 200px;
-}
-.current-content {
-  position: absolute;
-  left: 0;
-  overflow: hidden;
-  width: 100%;
-  height: 760px;
-}
-.content-num {
-  display: inline-block;
-  width: 200px;
-  margin-left: 30px;
-}
-.content-name {
-  display: inline-block;
-  width: 200px;
-}
-.content-or {
-  display: inline-block;
-  width: 200px;
-}
-.content-rentd {
-  display: inline-block;
-  width: 200px;
-}
-.content-backd {
-  display: inline-block;
-  width: 200px;
 }
 .footer {
   position: absolute;
@@ -385,7 +318,7 @@ export default {
   line-height: 72px;
   background: rgb(24, 109, 146);
   text-align: center;
-  margin-top: 780px;
+  margin-top: 830px;
 }
 .footer a {
   color: #fff;

@@ -1,9 +1,6 @@
 <template>
   <div class="card">
-    <div v-if="newlist.length===0">
-      <img src="../../assets/loading.gif" class="loading">
-    </div>
-    <div v-else>
+    <div>
       <div class="bg">
         <span class="title">学生卡服务</span>
       </div>
@@ -193,9 +190,9 @@ export default {
   position: absolute;
   top: 80px;
   margin-left: 54px;
-  bottom: 160px;
+  bottom: 80px;
   width: 90%;
-  background: #fff;
+  background:#fff;
   box-shadow: 1px 13px 25px #949494;
 }
 .card .menu-card {
@@ -291,7 +288,7 @@ input[type="date"]::-webkit-clear-button {
   width: 90%;
   height: 80px;
   background: #135677;
-  bottom: 80px;
+  bottom: 0px;
   margin-left: 54px;
 }
 .bottom .return {

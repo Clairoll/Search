@@ -21,7 +21,7 @@
           <div class="library-message-left">
             <div class="message-left-login">
               <router-link to="/login-library">
-                <img src="../../../assets/img/not-login.png" class="message-left-img"/>
+                <img src="../../../assets/img/not-login.jpg" class="message-left-img"/>
               </router-link>
               <div class="message-left-title">
                 我的图书馆
@@ -49,7 +49,7 @@
                     <span class="book-font">书目信息</span>
                   </div>
                   <div class="book-author book">
-                    题名/责任者:{{bookContents.tm}}、{{bookContents.dyzz}}
+                    题名/作者:{{bookContents.tm}}、{{bookContents.dyzz}}
                   </div>
                   <div class="book-date book">
                     出版日期：{{bookContents.cbrq}}
@@ -73,7 +73,7 @@
                 <span class="message-info">
                   {{computeBook(bookIntroductions.summary)}}
                 </span>
-                <span class="message-read-all" @click="showAll">阅读全文</span>
+                <button type="submit" class="message-read-all" @click="showAll(true)">阅读全文</button>
               </div>
               <div class="message-right-count">
                 <div class="message-way">
@@ -85,22 +85,43 @@
                     <th class="message-right-th">索书号</th>
                     <th class="message-right-th">条形码</th>
                     <th class="message-right-th">馆藏地</th>
-                    <th class="message-right-th">书刊状态</th>
+                    <th class="message-right-th">文献类型</th>
                     <th class="message-right-th">应还日期</th>
                   </tr>
                   <tr class="message-right-tr-big"
                       v-for="(item,index) of bookBorrows"
                       :key="index"
                   >
-                    <td class="message-right-td">{{item.flh}}</td>
+                    <td class="message-right-td">{{item.ssh}}</td>
                     <td class="message-right-td">{{item.tstxm}}</td>
                     <td class="message-right-td">{{item.gcdmc}}</td>
-                    <td class="message-right-td">{{item.tsztdm}}</td>
+                    <td class="message-right-td">{{item.wxlx}}</td>
                     <td class="message-right-td">
                       {{item.tsztdm==42?'不可以借出':item.userInfo==null?'可以借出':item.userInfo.yhrq}}
                     </td>
                   </tr>
                 </table>
+
+                <ul class="library-message-ul">
+                  <li
+                    class="library-message-previous li"
+                    @click="showPageArr('reduce')"
+                  >
+                    上一页
+                  </li>
+                  <li
+                    class="library-message-li li"
+                    v-for="(item,index) of navigatepageNums"
+                    :key="index"
+                    :class="currentIndex===item?'on':''"
+                    @click="showPageArr(item)"
+                  >
+                    {{item}}
+                  </li>
+                  <li class="library-message-next li" @click="showPageArr('add')">
+                    下一页
+                  </li>
+                </ul>
               </div>
             </div>
 
@@ -111,21 +132,23 @@
           </div>
         </div>
       <transition name="show">
-        <div class="mask" v-if="show" @click="show=false"></div>
-      </transition>
-      <transition name="show">
-        <div class="showIntroduction" v-if="show">
-            <div class="introduction" ref="introductionScroll">
-              <div>
-                {{computeBook(bookIntroductions.summary)}}
-              </div>
-            </div>
-            <div class="close" @click="show=false">
-              ×
-            </div>
-        </div>
+        <div class="mask" v-if="show==true" @click="showAll(false)"></div>
 
       </transition>
+      <transition name="show">
+        <div class="showIntroduction" v-if="show==true">
+          <div class="introduction" ref="introductionScroll">
+            <div>
+              {{computeBook(bookIntroductions.summary)}}
+            </div>
+          </div>
+          <div class="close" @click="showAll(false)">
+            ×
+          </div>
+        </div>
+      </transition>
+
+
 
       <div class="library-index-back" @click="back">
           返回
@@ -134,7 +157,6 @@
   </div>
 </template>
 <script>
-  import BScroll from 'better-scroll'
 
   export default {
     data(){
@@ -145,26 +167,10 @@
         bookBorrows:[],
         textContent:'',
         show:false,
-      }
-    },
-    watch:{
-      bookContents(value){
-        if(value){
-          this.$nextTick(()=>{
-            new BScroll(this.$refs.messageScroll,{
-              click:true
-            });
-          })
-        }
-      },
-      show(value){
-        if(value===true){
-          this.$nextTick(()=>{
-            new BScroll(this.$refs.introductionScroll,{
-              click:true
-            });
-          })
-        }
+        pages:0,
+        navigatepageNums:[],
+        page:1,
+        currentIndex:1
       }
     },
     computed:{
@@ -195,11 +201,11 @@
                jsonp: "callback",
                success: function(res) {
                 _this.bookIntroductions=res;
+
                },
                error: function() {
                  console.log("获取失败");
                }
-
              });
            }
 
@@ -210,14 +216,15 @@
       });
       $.ajax({
         type: "GET",
-        url:`${_this.GLOBAL.URL}/library/findBookStatus?SSH=${this.ssh}`,
+        url:`${_this.GLOBAL.URL}/library/findBookStatus/${this.page}?SSH=${this.ssh}`,
         dataType: "jsonp",
         async: true,
         jsonp: "callback",
         success: function(res) {
           if(res.code===200){
-            _this.bookBorrows=res.data;
-            console.log( _this.bookBorrows);
+            _this.bookBorrows=res.data.list;
+            _this.pages=res.data.pages;
+            _this.navigatepageNums=res.data.navigatepageNums;
           }
 
         },
@@ -225,28 +232,80 @@
           console.log("获取失败");
         }
       });
-
     },
     methods:{
       back(){
         this.$router.go(-1);
       },
-      showAll(){
-        this.show=true;
+      showAll(type){
+        if(type==true){
+          this.show=true;
+
+        }else{
+          this.show=false;
+        }
       },
       clearText(){
-        this.$router.push(`/library-find-book?page=1&tm=${this.textContent}`);
-        this.textContent='';
+        if(this.textContent===''){
+          return window.alert('书名不能为空！');
+        }else{
+          this.$router.push(`/library-find-book?page=1&tm=${this.textContent}`);
+          this.textContent='';
+        }
 
+
+      },
+      showPageArr(page){
+        if(page==='reduce'){
+          this.page-=1;
+          if(this.page<=1){
+            this.page=1;
+          }
+        }
+        else  if(page==='add'){
+          this.page+=1;
+          if(this.page>=this.pages){
+            this.page=this.pages
+          }
+        }else{
+          this.page=page;
+        }
+        this.currentIndex=this.page;
+        let _this=this;
+        $.ajax({
+          type: "GET",
+          url:`${_this.GLOBAL.URL}/library/findBookStatus/${this.page}?SSH=${this.ssh}`,
+          dataType: "jsonp",
+          async: true,
+          jsonp: "callback",
+          success: function(res) {
+            if(res.code===200){
+              _this.bookBorrows=res.data.list;
+              _this.pages=res.data.pages;
+              _this.navigatepageNums=res.data.navigatepageNums;
+            }
+          },
+          error: function() {
+            console.log("获取失败");
+          }
+        });
       }
     }
   }
 </script>
 <style  scoped>
+  .show-enter-active,.show-leave-active{
+    transition: all 0.5s ease;
+  }
+ .show-enter,.show-leave-active{
+   opacity: 0
+
+ }
   .library-index{
     width:100%;
     height:100%;
     position: absolute;
+    z-index: 120;
   }
   .library-index-header{
     width:100%;
@@ -290,7 +349,7 @@
     background: #fff;
     top:60px;
     right:46px;
-    bottom:124px;
+    bottom:82px;
     display: flex;
     box-shadow:-1px -1px 25px #555;
 
@@ -336,7 +395,7 @@
     position: absolute;
     left:127px;
     top:10px;
-    right:0;
+    right:5px;
     bottom: 0;
     overflow: hidden;
   }
@@ -350,7 +409,7 @@
   .library-index-back{
     position: absolute;
     left:50px;
-    bottom:52px;
+    bottom:10px;
     right:46px;
     font-family: SIMHEI;
     height:72px;
@@ -379,7 +438,7 @@
   .message-img{
     float: right;
     width:140px;
-    height:200px;
+    height:185px;
   }
   .img{
     width: 100%;
@@ -395,27 +454,29 @@
     font-size: 16px;
   }
   .book{
-    margin-top:22px;
+    margin-top:15px;
     color: #a1a19c;
     font-family: SIMHEI;
     font-size: 16px;
   }
+  .book-author{
+    line-height: 20px;
+  }
   .message-right-introduction{
     clear: both;
-    padding-top: 11px;
     color: #a1a19c;
     font-family: SIMHEI;
     font-size: 16px;
   }
   .message-right-count{
     clear: both;
-    padding-top:22px;
+    padding-top:12px;
     color: #a1a19c;
     font-family: SIMHEI;
     font-size: 16px;
   }
   .message-info{
-    line-height:34px;
+    line-height: 27px;
     display: -webkit-box;
     display: -moz-box;
     -moz-box-orient: vertical;
@@ -423,6 +484,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
+    margin-top: 4px;
   }
   .message-read-all{
     display: inline-block;
@@ -434,7 +496,7 @@
     background: #135677;
     border-radius: 5px;
     font-size: 14px;
-    margin-top: 20px;
+    margin-top:10px;
   }
   .message-splice{
     border-left:5px solid #135677;
@@ -475,6 +537,43 @@
     width:18%;
     text-align: center;
   }
+  .message-introduction{
+    float: left;
+    width: 70%;
+  }
+  .library-message-ul{
+    position: absolute;
+    left:50%;
+    margin-left: -175px;
+    margin-top: 30px;
+    width: 330px;
+    height:auto;
+  }
+  .library-message-li{
+    width: 30px;
+    height:30px;
+    text-align: center;
+    line-height: 30px;
+    border: 1px solid #ccc;
+    float: left;
+  }
+  .on{
+    color: red;
+  }
+  .library-message-previous,.library-message-next{
+    float: left;
+    width:80px;
+    height:30px;
+    text-align: center;
+    line-height: 30px;
+    border: 1px solid #ccc;
+  }
+  .li:hover{
+    cursor: pointer;
+  }
+  .show{
+    color: red;
+  }
   .mask{
     position: absolute;
     left:0;
@@ -486,10 +585,10 @@
     z-index: 99;
   }
   .showIntroduction{
-    width:50%;
-    height:50%;
-    margin-left: -25%;
-    margin-top: -18%;
+    width:80%;
+    height:80%;
+    margin-left: -40%;
+    margin-top:-30%;
     position: absolute;
     left:50%;
     top:50%;

@@ -35,14 +35,14 @@ export default {
     _check() {
       //获取用户输入的学号
       this.user = this.$refs.user.value;
-      this.pass = this.$refs.pass.value;
+      this.pass = this.$refs.pass.value.toUpperCase();
       let _this = this;
       if (this.user === "" || this.pass === "") {
         alert("请输入账号和密码");
       } else {
         $.ajax({
           type: "POST",
-          url: "http://222.195.120.110:8080/select/library/login",
+          url: _this.GLOBAL.URL+"/library/login",
           data: { SFRZH: _this.user, SFID: _this.pass },
           dataType: "jsonp",
           async: true,

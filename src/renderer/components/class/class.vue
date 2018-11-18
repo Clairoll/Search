@@ -538,7 +538,7 @@ export default {
   position: absolute;
   top: 80px;
   margin-left: 54px;
-  bottom: 160px;
+  bottom: 80px;
   width: 90%;
   background: #fff;
   box-shadow: 1px 13px 25px #949494;
@@ -639,7 +639,7 @@ export default {
   width: 90%;
   height: 80px;
   background: #135677;
-  bottom: 80px;
+  bottom: 0px;
   margin-left: 54px;
 }
 .bottom .return {

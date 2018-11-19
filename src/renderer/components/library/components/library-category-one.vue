@@ -266,7 +266,7 @@
     margin-left:30px;
     margin-top:17px;
     width:300px;
-    height:800px;
+    height:922px;
     border-right:1px solid #ccc;
 
   }
@@ -290,7 +290,7 @@
   }
   .category-view-right{
     flex: 1;
-    height:820px;
+    height:938px;
     position: relative;
   }
   .category-view-right-loading{

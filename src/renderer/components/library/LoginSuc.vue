@@ -14,25 +14,21 @@
           </div>
           <div class="header-name">{{this.$route.query.DZXM}},欢迎您！</div>
         </div>
-        <transition>
           <div
             class="left-current"
             :class="{'isActive': on}"
             @click="currentShow"
           >当前借阅</div>
-        </transition>
-        <transition>
           <div
             class="left-local"
             :class="{'isActive': close}"
             @click="localShow"
           >历史借阅</div>
-        </transition>
       </div>
       <dic class="current-none" v-if="MSG">{{MSG}}</dic>
       <!--right-->
       <div class="right" v-show="showLocal">
-        <div class="current">
+        <div class="current" v-if="!MSGH">
           <div class="right-header border-bottom" >
             <span class="header-signal"></span>
             <span class="header-content">历史借阅</span>
@@ -48,7 +44,7 @@
         </div>
       </div>
       <div class="right" v-show="showCurrent">
-        <div class="current">
+        <div class="current" v-if="!MSGC">
           <div class="right-header border-bottom" >
             <span class="header-signal"></span>
             <span class="header-content">当前借阅</span>
@@ -60,7 +56,7 @@
                 <el-table-column label="续借日期" prop="xjrq"></el-table-column>
                 <el-table-column label="应还日期" prop="yhrq"></el-table-column>
               </el-table>
-              <el-pagination background layout="prev, pager, next" :total="listcurrent.length"@size-change="handleSizeChange1" @current-change="handleCurrentChange1"></el-pagination>
+              <el-pagination  background layout="prev, pager, next" :total="listcurrent.length"@size-change="handleSizeChange1" @current-change="handleCurrentChange1"></el-pagination>
             </div>
           </div>
         </div>
@@ -89,7 +85,7 @@ export default {
       showLocal: false,
       showCurrent: true,
       user: this.$route.query.SFRZH,
-      MSG: ""
+      MSG: "",
     };
   },
   created() {
@@ -107,6 +103,7 @@ export default {
           _this.listcurrent = res.data;
         } else {
           _this.MSG = res.msg;
+          _this.MSGC=res.msg;
         }
       },
       error: function() {
@@ -147,6 +144,7 @@ export default {
             _this.listcurrent = res.data;
           } else {
             _this.MSG = res.msg;
+            _this.MSGC=res.msg;
           }
         },
         error: function() {
@@ -174,6 +172,7 @@ export default {
             _this.listlocal = res.data;
           } else {
             _this.MSG = res.msg;
+            _this.MSGH=res.msg;
           }
         },
         error: function() {
@@ -187,8 +186,8 @@ export default {
 
 <style scoped>
 .library {
-  position: relative;
   width: 100%;
+  height: 100%;
   font-family: "SIMHEI";
 }
 .header {
@@ -202,20 +201,20 @@ export default {
 }
 .content {
   position: absolute;
+  display: flex;
   z-index: 100;
   left: 50px;
-  top: 62px;
+  top: 64px;
   width: 100%;
-  height: 888px;
+  height:80%;
   background: #ffffff;
   border-top: 1px solid black;
   box-shadow: 0px 0px 10px #757575;
 }
 .left {
-  position: relative;
-  float: left;
+  flex: 0 0 140px;
   width: 140px;
-  height: 816px;
+  height:100%;
   margin-left: 25px;
   margin-top: 4px;
 }
@@ -263,13 +262,11 @@ export default {
   box-shadow: -3px -2px 4px 2px rgb(24, 109, 146);
 }
 .right {
-  position: relative;
-  float: left;
+  flex: 1;
   width: 100%;
-  height: 816px;
-  margin-left: 133px;
+  height: 100%;
+  margin-left: -30px;
   padding: 7px;
-  margin-top: -820px;
   box-shadow: 0px 0px 10px #757575;
 }
 .right-header {
@@ -300,8 +297,8 @@ export default {
   font-size: 20px;
   color: red;
   width: 100%;
-  margin-top: 300px;
-  margin-left: 280px;
+  margin-top: 400px;
+  text-align: center;
 }
 .current-title {
   width: 100%;
@@ -315,7 +312,6 @@ export default {
   font-size: 50px;
   width: 100%;
   height: 72px;
-  line-height: 72px;
   background: rgb(24, 109, 146);
   text-align: center;
   margin-top: 830px;

@@ -588,7 +588,7 @@
     width:80%;
     height:80%;
     margin-left: -40%;
-    margin-top:-30%;
+    margin-top:-36%;
     position: absolute;
     left:50%;
     top:50%;

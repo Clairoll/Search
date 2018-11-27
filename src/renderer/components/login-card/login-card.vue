@@ -14,7 +14,7 @@
           </div>
           <div class="pass">
             <span>密码:</span>
-            <input type="password" ref="pass" value="">
+            <input type="password" ref="pass" value="" @keyup.enter="_check">
           </div>
           <div class="search">
             <button  @click='_check'>查询</button>

@@ -5,7 +5,7 @@
         <div class="library-index-title">
           <h1 class="library-title-h1">图书书目查询</h1>
           <div class="library-title-input">
-            <input class="title-input" type="text" v-model="textFind" placeholder="请输入图书名称"/>
+            <input class="title-input" type="text" v-model="textFind" placeholder="请输入图书名称" @keyup.enter="showBottomBook(1)"/>
             <span
               class="title-search"
               @click="showBottomBook(1)"

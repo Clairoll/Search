@@ -177,18 +177,19 @@
       showPageArr(page){
         let _this=this;
         if(page==='reduce'){
-          this.page-=1;
-          if(this.page<=1){
-            this.page=1;
+            this.page=parseInt(this.page)-1;
+            if(this.page<=1){
+              this.page=1;
+            }
           }
-        }else  if(page==='add'){
-          this.page+=1;
-          if(this.page>=this.pages){
-            this.page=this.pages
+          else  if(page==='add'){
+            this.page=parseInt(this.page)+1;
+            if(this.page>=this.pages){
+              this.page=this.pages
+            }
+          }else{
+            this.page=parseInt(page);
           }
-        }else{
-          this.page=page;
-        }
         this.currentIndex=this.page;
         this.bookArr=[];
         $.ajax({

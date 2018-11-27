@@ -5,7 +5,8 @@
       <span class="header-name">我的图书馆</span>
     </div>
     <!--content-->
-    <div class="content">
+    <div class="Rcontent"> 
+       <div class="content">
       <!--left-->
       <div class="left">
         <div class="left-header">
@@ -61,7 +62,8 @@
           </div>
         </div>
       </div>
-      <!--footer-->
+    </div>
+     <!--footer-->
       <div class="footer">
         <router-link to="/">返回</router-link>
       </div>
@@ -199,14 +201,18 @@ export default {
   font-size: 50px;
   color: #ffffff;
 }
+.Rcontent{
+  position:absolute;
+  width: 95%;
+  height:87%;
+  left: 50px;
+  top: 66px;
+}
 .content {
-  position: absolute;
   display: flex;
   z-index: 100;
-  left: 50px;
-  top: 64px;
   width: 100%;
-  height:80%;
+  height:90%;
   background: #ffffff;
   border-top: 1px solid black;
   box-shadow: 0px 0px 10px #757575;
@@ -266,7 +272,6 @@ export default {
   width: 100%;
   height: 100%;
   margin-left: -30px;
-  padding: 7px;
   box-shadow: 0px 0px 10px #757575;
 }
 .right-header {
@@ -308,18 +313,18 @@ export default {
   color: rgb(24, 109, 146);
 }
 .footer {
-  position: absolute;
   font-size: 50px;
   width: 100%;
-  height: 72px;
+  height:10%;
   background: rgb(24, 109, 146);
   text-align: center;
-  margin-top: 830px;
 }
 .footer a {
   color: #fff;
+  line-height: 93px;
   font-weight: bold;
   font-family: JLH;
 }
 </style>
+
 
